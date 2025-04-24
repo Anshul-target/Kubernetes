@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: springboot-app
+  namespace: springboot-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-app
+  template:
+    metadata:
+      labels:
+        app: springboot-app
+    spec:
+      containers:
+        - name: springboot-app
+          image: anshulyadav2007/springboot-mongo:v1  # Replace with your image
+          ports:
+            - containerPort: 8080
+          env:
+            # Or individual properties approach
+            - name: SPRING_DATA_MONGODB_HOST
+              value: "mongodb"
+            - name: SPRING_DATA_MONGODB_PORT
+              value: "27017"
+            - name: SPRING_DATA_MONGODB_DATABASE
+              value: "userDB"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: springboot-service
+  namespace: springboot-app
+spec:
+  selector:
+    app: springboot-app
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: NodePort
