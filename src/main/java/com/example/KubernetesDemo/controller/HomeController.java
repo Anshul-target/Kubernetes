@@ -20,7 +20,7 @@ public class HomeController {
 
     @GetMapping
     public String index(){
-        return "hi my friend ";
+        return "hi my friend this is anshul...";
     }
     @PostMapping("/save")
     public ResponseEntity<Map<String,String>> saveUser(@ModelAttribute @Valid UserDto userDto){
