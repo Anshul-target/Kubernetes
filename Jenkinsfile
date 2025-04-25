@@ -35,8 +35,8 @@ pipeline {
                     bat 'docker build -t anshul2007/springboot-app .'
 
                     if (env.FIRST_BUILD == 'true') {
-                        bat 'docker tag anshul2007/springboot-app anshul2007/springboot-app:latest'
-                        bat 'docker push anshul2007/springboot-app:latest'
+                        bat 'docker tag anshulyadav2007/springboot-app anshul2007/springboot-app:latest'
+                        bat 'docker push anshulyadav2007/springboot-app:latest'
                     } else {
                         bat "docker tag anshul2007/springboot-app anshul2007/springboot-app:${BUILD_NUMBER}"
                         bat "docker push anshul2007/springboot-app:${BUILD_NUMBER}"
