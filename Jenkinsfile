@@ -30,14 +30,14 @@ pipeline {
                 bat 'echo %DOCKER_CREDENTIALS_PSW% | docker login -u %DOCKER_CREDENTIALS_USR% --password-stdin'
 
                 // Build the Docker image
-                bat 'docker build -t anshul2007/springboot-app .'
+                bat 'docker build -t anshulyadav2007/springboot-app .'
 
                 // Tag with build number
-                bat "docker tag anshul2007/springboot-app anshul2007/springboot-app:${BUILD_NUMBER}"
+                bat "docker tag anshulyadav2007/springboot-app anshulyadav2007/springboot-app:${BUILD_NUMBER}"
 
                 // Push both latest and versioned tag
-                bat 'docker push anshul2007/springboot-app:latest'
-                bat "docker push anshul2007/springboot-app:${BUILD_NUMBER}"
+                bat 'docker push anshulyadav2007/springboot-app:latest'
+                bat "docker push anshulyadav2007/springboot-app:${BUILD_NUMBER}"
 
                 // Logout from Docker Hub
                 bat 'docker logout'
