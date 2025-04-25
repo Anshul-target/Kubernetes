@@ -3,19 +3,14 @@ pipeline {
 
     tools {
         maven 'maven'
-        // Remove: docker 'Docker'
     }
 
     environment {
-        FIRST_BUILD = "${BUILD_NUMBER == '1' ? 'true' : 'false'}"
+        // Define Docker Hub credentials - this will use the credentials you stored in Jenkins
+        DOCKER_CREDENTIALS = credentials('dockerhub-creds')
     }
 
     stages {
-        stage('check environment') {
-                    steps {
-                        bat 'set'
-                    }
-                }
         stage('mvn build') {
             steps {
                 bat 'mvn clean install'
@@ -29,19 +24,23 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build and Push Docker Image') {
             steps {
-                script {
-                    bat 'docker build -t anshul2007/springboot-app .'
+                // Login to Docker Hub
+                bat 'echo %DOCKER_CREDENTIALS_PSW% | docker login -u %DOCKER_CREDENTIALS_USR% --password-stdin'
 
-                    if (env.FIRST_BUILD == 'true') {
-                        bat 'docker tag anshulyadav2007/springboot-app anshul2007/springboot-app:latest'
-                        bat 'docker push anshulyadav2007/springboot-app:latest'
-                    } else {
-                        bat "docker tag anshul2007/springboot-app anshul2007/springboot-app:${BUILD_NUMBER}"
-                        bat "docker push anshul2007/springboot-app:${BUILD_NUMBER}"
-                    }
-                }
+                // Build the Docker image
+                bat 'docker build -t anshul2007/springboot-app .'
+
+                // Tag with build number
+                bat "docker tag anshul2007/springboot-app anshul2007/springboot-app:${BUILD_NUMBER}"
+
+                // Push both latest and versioned tag
+                bat 'docker push anshul2007/springboot-app:latest'
+                bat "docker push anshul2007/springboot-app:${BUILD_NUMBER}"
+
+                // Logout from Docker Hub
+                bat 'docker logout'
             }
         }
     }
